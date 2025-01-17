@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-book
+    environment:
+      POSTGRES_USER: book_user
+      POSTGRES_PASSWORD: book_password
+      POSTGRES_DB: book_db
+    ports:
+      - "5436:5432"
+
+  book-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: book-api
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/book_db
+      SPRING_DATASOURCE_USERNAME: book_user
+      SPRING_DATASOURCE_PASSWORD: book_password
+      KAFKA_BROKERS: localhost:29092
+      SPRING_KAFKA_BOOTSTRAP-SERVERS: localhost:29092
+      SPRING_KAFKA_PRODUCER_BOOTSTRAP-SERVERS: localhost:29092
+    depends_on:
+      - postgres
+    ports:
+      - "8006:8006"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
+

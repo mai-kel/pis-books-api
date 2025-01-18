@@ -4,6 +4,7 @@ import com.example.bookapi.dtos.CategoryDTO;
 import com.example.bookapi.dtos.UpdateCategoryDTO;
 import com.example.bookapi.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -49,14 +50,17 @@ public class CategoryController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}/")
-    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMIN')")
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_LIBRARIAN', 'ROLE_ADMIN')")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        if (categoryService.deleteCategory(id)) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+        boolean isCategoryUsed = categoryService.isCategoryUsed(id);
+
+        if (isCategoryUsed) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(null);
         }
+        categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
     }
 }
 

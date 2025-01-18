@@ -17,7 +17,7 @@ public class Book {
 
     private String description;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
     private List<Authorship> authorships;
 
     // Getters and setters

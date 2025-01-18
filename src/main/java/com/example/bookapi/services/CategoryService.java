@@ -3,6 +3,7 @@ package com.example.bookapi.services;
 import com.example.bookapi.dtos.CategoryDTO;
 import com.example.bookapi.dtos.UpdateCategoryDTO;
 import com.example.bookapi.entities.Category;
+import com.example.bookapi.repositories.BookRepository;
 import com.example.bookapi.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,12 @@ import java.util.Optional;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final BookRepository bookRepository;
 
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, BookRepository bookRepository) {
         this.categoryRepository = categoryRepository;
+        this.bookRepository = bookRepository;
     }
 
     public List<CategoryDTO> getAllCategories() {
@@ -54,6 +57,10 @@ public class CategoryService {
             return true;
         }
         return false;
+    }
+
+    public boolean isCategoryUsed(Long categoryId) {
+        return bookRepository.existsByCategoryId(categoryId);
     }
 }
 

@@ -1,5 +1,7 @@
 package com.example.bookapi.entities;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -54,7 +56,7 @@ public class Book {
     }
 
     public List<Authorship> getAuthorships() {
-        return authorships;
+        return (authorships == null) ? new ArrayList<>() : authorships;
     }
 
     public void setAuthorships(List<Authorship> authorships) {

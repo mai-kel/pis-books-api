@@ -13,7 +13,7 @@ import com.example.bookapi.services.BookService;
 
 import java.util.List;
 @RestController
-@RequestMapping("/books")
+@RequestMapping("/book-api/books")
 public class BookController {
 
     private final BookService bookService;
